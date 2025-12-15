@@ -67,7 +67,7 @@ func (w *statusWaiter) WatchUntilReady(resourceList ResourceList, timeout time.D
 	}
 	ctx, cancel := w.contextWithTimeout(timeout)
 	defer cancel()
-	slog.Debug("waiting for resources", "count", len(resourceList), "timeout", timeout)
+	slog.Info("waiting for resources", "count", len(resourceList), "timeout", timeout)
 	sw := watcher.NewDefaultStatusWatcher(w.client, w.restMapper)
 	jobSR := helmStatusReaders.NewCustomJobStatusReader(w.restMapper)
 	podSR := helmStatusReaders.NewCustomPodStatusReader(w.restMapper)
@@ -91,7 +91,7 @@ func (w *statusWaiter) Wait(resourceList ResourceList, timeout time.Duration) er
 	}
 	ctx, cancel := w.contextWithTimeout(timeout)
 	defer cancel()
-	slog.Debug("waiting for resources", "count", len(resourceList), "timeout", timeout)
+	slog.Info("waiting for resources", "count", len(resourceList), "timeout", timeout)
 	sw := watcher.NewDefaultStatusWatcher(w.client, w.restMapper)
 	return w.wait(ctx, resourceList, sw)
 }
@@ -102,7 +102,7 @@ func (w *statusWaiter) WaitWithJobs(resourceList ResourceList, timeout time.Dura
 	}
 	ctx, cancel := w.contextWithTimeout(timeout)
 	defer cancel()
-	slog.Debug("waiting for resources", "count", len(resourceList), "timeout", timeout)
+	slog.Info("waiting for resources", "count", len(resourceList), "timeout", timeout)
 	sw := watcher.NewDefaultStatusWatcher(w.client, w.restMapper)
 	newCustomJobStatusReader := helmStatusReaders.NewCustomJobStatusReader(w.restMapper)
 	customSR := statusreaders.NewStatusReader(w.restMapper, newCustomJobStatusReader)
@@ -116,7 +116,7 @@ func (w *statusWaiter) WaitForDelete(resourceList ResourceList, timeout time.Dur
 	}
 	ctx, cancel := w.contextWithTimeout(timeout)
 	defer cancel()
-	slog.Debug("waiting for resources to be deleted", "count", len(resourceList), "timeout", timeout)
+	slog.Info("waiting for resources to be deleted", "count", len(resourceList), "timeout", timeout)
 	sw := watcher.NewDefaultStatusWatcher(w.client, w.restMapper)
 	return w.waitForDelete(ctx, resourceList, sw)
 }
@@ -231,7 +231,7 @@ func statusObserver(cancel context.CancelFunc, desired status.Status) collector.
 		}
 
 		if aggregator.AggregateStatus(rss, desired) == desired {
-			slog.Debug("all resources achieved desired status", "desiredStatus", desired, "resourceCount", len(rss))
+			slog.Info("all resources achieved desired status", "desiredStatus", desired, "resourceCount", len(rss))
 			cancel()
 			return
 		}
